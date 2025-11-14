@@ -1,0 +1,307 @@
+<meta name='viewport' content='width=device-width, initial-scale=1'/><!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>UBUDASA Shop</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --red:#E30613;
+  --white:#FFFFFF;
+  --black:#1C1C1C;
+  --light-gray:#F5F5F5;
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:'Open Sans',sans-serif;background:var(--white);color:var(--black);}
+header{background:var(--red);color:var(--white);padding:12px 16px;display:flex;justify-content:space-between;align-items:center}
+header h1{font-family:'Montserrat',sans-serif;font-size:1.2rem;margin:0}
+.whatsapp-icon{font-size:1.3rem}
+nav{display:flex;justify-content:space-around;background:var(--white);border-bottom:1px solid var(--light-gray);position:sticky;top:0;z-index:100}
+nav button{background:none;border:none;padding:12px;font-family:'Montserrat',sans-serif;font-weight:600;cursor:pointer;color:var(--black)}
+nav button.active{color:var(--red);border-bottom:2px solid var(--red)}
+main{padding:16px;}
+
+/* Home */
+#home{ text-align:center; padding:30px 16px; }
+#home h2{color:var(--red);font-family:'Montserrat',sans-serif;margin-bottom:12px;font-size:1.5rem}
+#home p{font-size:1rem;line-height:1.5;margin-bottom:12px}
+#home button{background:var(--red);color:var(--white);border:none;padding:10px 16px;border-radius:8px;cursor:pointer;font-weight:600}
+
+/* Products - 2 per row */
+#products{ display:none; margin-top:12px; gap:12px; grid-template-columns:repeat(2,1fr); }
+.products-grid{ display:grid; grid-template-columns:repeat(2,1fr); gap:12px; }
+.product{ background:var(--light-gray); border-radius:12px; overflow:hidden; display:flex; flex-direction:column; align-items:center; padding:8px; box-shadow:0 2px 4px rgba(0,0,0,0.06)}
+.product img{ width:100%; height:140px; object-fit:cover; border-radius:8px }
+.product h3{ margin:8px 0 4px; font-family:'Montserrat',sans-serif; font-size:1rem }
+.product p{ margin:0 0 8px; font-weight:700; color:var(--red) }
+.product button{ width:100%; background:var(--red); color:var(--white); border:none; padding:8px; border-radius:8px; cursor:pointer; font-weight:700 }
+
+/* Show more button */
+.show-more-wrap{ text-align:center; margin-top:10px }
+.show-more{ background:#fff;border:1px solid var(--red); color:var(--red); padding:8px 14px;border-radius:6px; cursor:pointer; font-weight:700 }
+
+/* Floating buttons */
+.cart-btn,.admin-btn{ position:fixed; bottom:40px; width:60px; height:60px; border-radius:50%; display:flex; align-items:center; justify-content:center; color:var(--white); border:none; cursor:pointer; z-index:200; font-size:1.2rem}
+.cart-btn{ right:20px; background:var(--red) }
+.admin-btn{ left:20px; background:var(--black) }
+
+/* cart count */
+.cart-count{ position:absolute; top:5px; right:5px; background:var(--white); color:var(--red); border-radius:50%; width:20px; height:20px; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:0.8rem }
+
+/* Cart overlay */
+.cart-overlay{ position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.5); display:none; align-items:center; justify-content:center; z-index:300 }
+.cart-content{ width:90%; max-width:420px; background:var(--white); padding:16px; border-radius:10px; max-height:80%; overflow:auto }
+.cart-content h2{ color:var(--red); margin-top:0; font-family:'Montserrat',sans-serif }
+.cart-item{ display:flex; justify-content:space-between; align-items:center; margin-bottom:10px }
+.payment-info{ margin-top:12px; padding:10px; background:#f5f5f5; border-radius:8px; font-weight:600; }
+
+/* Admin panel */
+.admin-panel{ position:fixed; bottom:110px; left:20px; background:var(--white); padding:12px; border-radius:10px; box-shadow:0 4px 14px rgba(0,0,0,0.12); display:none; width:260px; z-index:400 }
+.admin-panel h2{ margin:0 0 8px 0; font-family:'Montserrat',sans-serif }
+.admin-panel input{ width:100%; padding:8px; margin-bottom:8px; border-radius:6px; border:1px solid #ccc }
+.admin-panel button{ width:100%; padding:8px; background:var(--red); color:var(--white); border:none; border-radius:6px; cursor:pointer; font-weight:700 }
+
+/* footer */
+.cart-footer{ position:fixed; bottom:5px; right:20px; font-size:0.9rem; color:var(--black) }
+@media(min-width:900px){
+  .product img{ height:160px }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>UBUDASA SHOP</h1>
+  <a class="whatsapp-icon" href="https://wa.me/250785485314" target="_blank">📲</a>
+</header>
+
+<nav>
+  <button class="active" onclick="switchTab(event,'home')">Home</button>
+  <button onclick="switchTab(event,'products')">Products</button>
+  <button onclick="switchTab(event,'about')">About</button>
+  <button onclick="switchTab(event,'contact')">Contact</button>
+</nav>
+
+<main>
+  <!-- Home -->
+  <div id="home">
+    <h2>Welcome to UBUDASA Shop</h2>
+    <p>We deliver your items directly to your doorstep. Pay only when you receive your products.</p>
+    <p>Enjoy shopping with us!</p>
+    <button onclick="switchTab(null,'products')">Shop Now</button>
+  </div>
+
+  <!-- Products (hidden initially) -->
+  <div id="products">
+    <div class="products-grid" id="productsGrid"></div>
+    <div class="show-more-wrap" id="showMoreWrap" style="display:none">
+      <button class="show-more" onclick="renderProducts(true)">Show more</button>
+    </div>
+  </div>
+
+  <!-- About -->
+  <div id="about" style="display:none">
+    <h2>About Us</h2>
+    <p>Ubudasa Shop provides quality and practical items for students and everyone. Fast delivery, easy payment.</p>
+  </div>
+
+  <!-- Contact -->
+  <div id="contact" style="display:none">
+    <h2>Contact</h2>
+    <p>WhatsApp: <a href="https://wa.me/250785485314" target="_blank">0785485314</a></p>
+    <p>Email: ubudasashop@gmail.com</p>
+  </div>
+</main>
+
+<!-- Floating Buttons -->
+<button class="admin-btn" id="adminBtn" onclick="toggleAdmin()">🕺</button>
+<button class="cart-btn" id="cartBtn" onclick="toggleCart()">🛒<div class="cart-count" id="cart-count">0</div></button>
+<div class="cart-footer">© 2025 Ubudasa Shop</div>
+
+<!-- Cart overlay -->
+<div class="cart-overlay" id="cartOverlay">
+  <div class="cart-content">
+    <h2>Your Cart</h2>
+    <div id="cartItems"></div>
+    <div id="paymentInfo" class="payment-info" style="display:none"></div>
+    <button onclick="toggleCart()">Close</button>
+  </div>
+</div>
+
+<!-- Admin panel -->
+<div class="admin-panel" id="adminPanel">
+  <h2>Admin Panel</h2>
+  <input id="adminName" placeholder="Product name" />
+  <input id="adminPrice" placeholder="Price (RWF)" type="number" />
+  <input id="adminImg" placeholder="Image URL" />
+  <button onclick="adminAddProduct()">Add product</button>
+  <div id="adminList" style="margin-top:8px; max-height:140px; overflow:auto"></div>
+</div>
+
+<script>
+// Data
+let cart = [];
+let products = [
+  {id:1,name:'Ipasi',price:3000,img:'https://via.placeholder.com/400x250?text=Ipasi'},
+  {id:2,name:'Kettle',price:12000,img:'https://via.placeholder.com/400x250?text=Kettle'},
+  {id:3,name:'Charger',price:8000,img:'https://via.placeholder.com/400x250?text=Charger'},
+  {id:4,name:'Notebook',price:5000,img:'https://via.placeholder.com/400x250?text=Notebook'},
+  {id:5,name:'blender',price:60000,img:'https://via.placeholder.com/400x250?text=blender'},
+  {id:6,name:'gascooker',price:40000,img:'https://via.placeholder.com/400x250?text=gas cooker'},
+  // more can be added by admin
+];
+
+const productsGrid = document.getElementById('productsGrid');
+const showMoreWrap = document.getElementById('showMoreWrap');
+
+// helpers
+function formatPrice(v){ return 'RWF ' + (Number(v)||0).toLocaleString(); }
+function escapeHtml(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+// renderProducts(showAll = false)
+// - when showAll=false it shows only first 4 (2x2 grid visible)
+// - when showAll=true it shows all products and hides the Show more button
+function renderProducts(showAll=false){
+  productsGrid.innerHTML = '';
+  const list = showAll ? products.slice() : products.slice(0,4);
+  list.forEach(p=>{
+    const div = document.createElement('div');
+    div.className = 'product';
+    div.innerHTML = `
+      <img src="${escapeHtml(p.img)}" alt="${escapeHtml(p.name)}">
+      <h3>${escapeHtml(p.name)}</h3>
+      <p>${formatPrice(p.price)}</p>
+      <button onclick="buy(${p.id})">Buy</button>
+    `;
+    productsGrid.appendChild(div);
+  });
+
+  // Show 'Show more' only if there are more than 4 and not showing all
+  if(!showAll && products.length > 4){
+    showMoreWrap.style.display = 'block';
+  } else {
+    showMoreWrap.style.display = 'none';
+  }
+
+  // update admin list (keeps in sync)
+  renderAdminList();
+}
+
+// Tabs
+function switchTab(evt, tab){
+  // hide all main sections
+  document.querySelectorAll('main > div').forEach(d=>d.style.display='none');
+  // show target
+  const el = document.getElementById(tab);
+  if(el) el.style.display = (tab === 'products') ? 'block' : 'block';
+  // nav active class
+  document.querySelectorAll('nav button').forEach(b=>b.classList.remove('active'));
+  if(evt && evt.target) evt.target.classList.add('active');
+  // when products tab open: render only first 4
+  if(tab === 'products') renderProducts(false);
+}
+
+// ensure home visible first
+document.addEventListener('DOMContentLoaded', ()=> {
+  switchTab(null,'home');
+});
+
+// Cart functions
+function buy(id){
+  const p = products.find(x=>x.id===id);
+  if(!p) return;
+  cart.push({id:p.id,name:p.name,price:p.price});
+  updateCartCount();
+}
+function updateCartCount(){ document.getElementById('cart-count').innerText = cart.length; }
+function toggleCart(){
+  const overlay = document.getElementById('cartOverlay');
+  const isOpen = overlay.style.display === 'flex';
+  overlay.style.display = isOpen ? 'none' : 'flex';
+  if(!isOpen) renderCart();
+}
+function renderCart(){
+  const el = document.getElementById('cartItems');
+  const info = document.getElementById('paymentInfo');
+  el.innerHTML = '';
+  if(cart.length === 0){
+    info.style.display = 'none';
+    el.innerHTML = '<p>Your cart is empty!</p>';
+    return;
+  }
+  let total = 0;
+  cart.forEach((c,i)=>{
+    total += c.price;
+    const row = document.createElement('div');
+    row.className = 'cart-item';
+    row.innerHTML = `<div>${escapeHtml(c.name)} - ${formatPrice(c.price)}</div>
+      <div><button onclick="removeFromCart(${i})">Remove</button></div>`;
+    el.appendChild(row);
+  });
+  const upfront = Math.round(total * 0.1);
+  const remaining = total - upfront;
+  info.style.display = 'block';
+  info.innerHTML = `${formatPrice(total)}<br>Pay 10% upfront: ${formatPrice(upfront)} (MoMo: 603629)<br>Remaining on delivery: ${formatPrice(remaining)}`;
+}
+function removeFromCart(i){ cart.splice(i,1); updateCartCount(); renderCart(); }
+
+// Admin functions
+function toggleAdmin(){
+  const panel = document.getElementById('adminPanel');
+  panel.style.display = (panel.style.display === 'block') ? 'none' : 'block';
+}
+function adminAddProduct(){
+  const nameEl = document.getElementById('adminName');
+  const priceEl = document.getElementById('adminPrice');
+  const imgEl = document.getElementById('adminImg');
+  const name = nameEl.value.trim();
+  const price = parseInt(priceEl.value);
+  const img = imgEl.value.trim();
+  if(!name || !price || !img){ alert('Fill all fields'); return; }
+  const id = products.length ? products[products.length-1].id + 1 : 1;
+  products.push({id,name,price,img});
+  nameEl.value = ''; priceEl.value = ''; imgEl.value = '';
+  // After admin add, show all products so admin can verify immediately
+  renderProducts(true);
+}
+function renderAdminList(){
+  const listEl = document.getElementById('adminList');
+  if(!listEl) return;
+  listEl.innerHTML = '';
+  products.forEach(p=>{
+    const row = document.createElement('div');
+    row.style.display = 'flex'; row.style.justifyContent = 'space-between'; row.style.marginBottom = '6px';
+    const left = document.createElement('div');
+    left.textContent = `${p.name} - ${formatPrice(p.price)}`;
+    const right = document.createElement('div');
+    right.innerHTML = `<button onclick="adminEdit(${p.id})" style="margin-right:6px">Edit</button><button onclick="adminDelete(${p.id})">Delete</button>`;
+    row.appendChild(left); row.appendChild(right);
+    listEl.appendChild(row);
+  });
+}
+function adminDelete(id){
+  if(!confirm('Delete this product?')) return;
+  products = products.filter(p=>p.id !== id);
+  // re-render products (if currently viewing products, show up to 4)
+  const productsSection = document.getElementById('products');
+  if(productsSection.style.display === 'block') renderProducts(false);
+  renderAdminList();
+}
+function adminEdit(id){
+  const p = products.find(x=>x.id===id);
+  if(!p) return;
+  const newName = prompt('Product name:', p.name);
+  const newPrice = prompt('Price (RWF):', p.price);
+  const newImg = prompt('Image URL:', p.img);
+  if(newName && newPrice && newImg){
+    p.name = newName; p.price = parseInt(newPrice) || p.price; p.img = newImg;
+    // re-render
+    const productsSection = document.getElementById('products');
+    if(productsSection.style.display === 'block') renderProducts(false);
+    renderAdminList();
+  }
+}
+</script>
+</body>
+</html>
